@@ -6,8 +6,7 @@ var twitter = require("twitter");
 var fs = require("fs");
 var keys = require("./keys.js");
 
-//variable for twitter keys
-tKeys = keys.twitterKeys;
+
 
 //add inquirer prompt
 inquirer.prompt([
@@ -46,7 +45,16 @@ inquirer.prompt([
 //function for viewing the past 10 tweets on your twitter account
 function myTweets() {
     console.log("tweet!")
-
+    //variable for twitter keys
+    console.log(keys.twitterKeys);
+    var client = new twitter(keys.twitterKeys);
+    console.log(client);
+    var params = {screen_name: 'nbh1387'};
+    client.get('statuses/user_timeline', params, function(error, tweets, response) {
+        if (!error) {
+            console.log(tweets.consumer_key);
+        }
+    });
 };
 
 //function for giving song information to the user
