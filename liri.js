@@ -44,15 +44,15 @@ inquirer.prompt([
 
 //function for viewing the past 10 tweets on your twitter account
 function myTweets() {
-    console.log("tweet!")
     //variable for twitter keys
-    console.log(keys.twitterKeys);
     var client = new twitter(keys.twitterKeys);
-    console.log(client);
     var params = {screen_name: 'nbh1387'};
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
-            console.log(tweets.consumer_key);
+            for(i=0; i<20; i++) {
+                console.log(tweets[i].created_at.split("+")[0]);
+                console.log(tweets[i].text);
+            }
         }
     });
 };
@@ -60,6 +60,21 @@ function myTweets() {
 //function for giving song information to the user
 function spotifyThisSong() {
     console.log("Spotifying")
+    inquirer.prompt([
+        {
+        type: "input",
+        message: "Enter a song name...",
+        name: "spotify_search"
+        },
+    ]).then(function(spotifying) {
+        spotify.search({ type: 'track', query: spotifying.spotify_search }, function(err, data) {
+            if ( err ) {
+                console.log('Error occurred: ' + err);
+                return;
+            }
+        console.log(data);
+        });
+    })
 
 };
 
