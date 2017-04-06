@@ -105,7 +105,20 @@ function theSign () {
 //function for giving movie information to the user
 function movieThis() {
     console.log("Looking up movie info")
-
+    inquirer.prompt([
+        {
+        type: "input",
+        message: "Enter a movie name...",
+        name: "omdb_search"
+        },
+    ]).then(function(omdbing) {
+        var queryUrl = "http://www.omdbapi.com/?t=" + omdbing.omdb_search + "&y=&plot=short&r=json";
+        request(queryUrl, function(error, response, body) {
+            if(!error && response.statusCode === 200) {
+                console.log("The movie was released in " + JSON.parse(body).Released.split(" ")[2]);
+            }
+        });
+    });
 };
 
 //function for grabbing the text from random and doing what it says
