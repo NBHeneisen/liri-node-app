@@ -59,7 +59,6 @@ function myTweets() {
 
 //function for giving song information to the user
 function spotifyThisSong() {
-    console.log("Spotifying")
     inquirer.prompt([
         {
         type: "input",
@@ -67,16 +66,41 @@ function spotifyThisSong() {
         name: "spotify_search"
         },
     ]).then(function(spotifying) {
-        spotify.search({ type: 'track', query: spotifying.spotify_search }, function(err, data) {
-            if ( err ) {
-                console.log('Error occurred: ' + err);
-                return;
-            }
-        console.log(data);
-        });
+        if (spotifying.spotify_search === "") {
+            theSign()
+        } else {
+            spotify.search({ type: 'track', query: spotifying.spotify_search }, function(err, data) {
+                if ( err ) {
+                    console.log('Error occurred: ' + err);
+                    return;
+                };
+                for (i=0; i < data.tracks.items.length; i++) {
+                    console.log("Artist: " + data.tracks.items[i].artists[0].name);
+                    console.log("Song: " + data.tracks.items[i].name);
+                    console.log("Preview: " + data.tracks.items[i].preview_url);
+                    console.log("Album: " + data.tracks.items[i].album.name);
+                    console.log("-------------------------------")
+                }
+            });
+        }
     })
-
 };
+//Function that uses the spotify API and returns info on the song "The Sign" by Ace of Base
+//Used if the user doesn't choose a song for the spotify function
+function theSign () {
+    spotify.search({ type: 'track', query: "The Sign, Ace of Base" }, function(err, data) {
+        if ( err ) {
+            console.log('Error occurred: ' + err);
+            return;
+        };
+            console.log("You didn't provide me with a song name, so in return you receive...")
+            console.log("Artist: " + data.tracks.items[0].artists[0].name);
+            console.log("Song: " + data.tracks.items[0].name);
+            console.log("Preview: " + data.tracks.items[0].preview_url);
+            console.log("Album: " + data.tracks.items[0].album.name);
+    });
+};
+
 
 //function for giving movie information to the user
 function movieThis() {
