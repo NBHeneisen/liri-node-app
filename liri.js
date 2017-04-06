@@ -114,8 +114,16 @@ function movieThis() {
     ]).then(function(omdbing) {
         var queryUrl = "http://www.omdbapi.com/?t=" + omdbing.omdb_search + "&y=&plot=short&r=json";
         request(queryUrl, function(error, response, body) {
+            parseBody=JSON.parse(body);
             if(!error && response.statusCode === 200) {
-                console.log("The movie was released in " + JSON.parse(body).Released.split(" ")[2]);
+                console.log("Title: " + parseBody.Title);
+                console.log("Year released: " + parseBody.Year);
+                console.log("IMDB Rating: " + parseBody.imdbRating);
+                console.log("Country of origin: " + parseBody.Country);
+                console.log("Language(s): " + parseBody.Language);
+                console.log("Plot: " + parseBody.Plot);
+                console.log("Cast: " + parseBody.Actors);
+                console.log("Rotten Tomatoes Score: " + parseBody.Ratings[1].Value);
             }
         });
     });
