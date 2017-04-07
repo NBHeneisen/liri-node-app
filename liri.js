@@ -104,7 +104,6 @@ function theSign () {
 
 //function for giving movie information to the user
 function movieThis() {
-    console.log("Looking up movie info")
     inquirer.prompt([
         {
         type: "input",
@@ -112,25 +111,56 @@ function movieThis() {
         name: "omdb_search"
         },
     ]).then(function(omdbing) {
-        var queryUrl = "http://www.omdbapi.com/?t=" + omdbing.omdb_search + "&y=&plot=short&r=json";
-        request(queryUrl, function(error, response, body) {
-            parseBody=JSON.parse(body);
-            if(!error && response.statusCode === 200) {
-                console.log("Title: " + parseBody.Title);
-                console.log("Year released: " + parseBody.Year);
-                console.log("IMDB Rating: " + parseBody.imdbRating);
-                console.log("Country of origin: " + parseBody.Country);
-                console.log("Language(s): " + parseBody.Language);
-                console.log("Plot: " + parseBody.Plot);
-                console.log("Cast: " + parseBody.Actors);
-                console.log("Rotten Tomatoes Score: " + parseBody.Ratings[1].Value);
-            }
-        });
+        if(omdbing.omdb_search=== "") {
+            var queryUrl = "http://www.omdbapi.com/?t=Mr+Nobody&y=&plot=short&r=json";
+            request(queryUrl, function(error, response, body) {
+                parseBody=JSON.parse(body);
+                if(!error && response.statusCode === 200) {
+                    console.log("Title: " + parseBody.Title);
+                    console.log("Year released: " + parseBody.Year);
+                    console.log("IMDB Rating: " + parseBody.imdbRating);
+                    console.log("Country of origin: " + parseBody.Country);
+                    console.log("Language(s): " + parseBody.Language);
+                    console.log("Plot: " + parseBody.Plot);
+                    console.log("Cast: " + parseBody.Actors);
+                    console.log("Rotten Tomatoes Score: " + parseBody.Ratings[1].Value);
+                }
+            });
+
+        } else {
+            var queryUrl = "http://www.omdbapi.com/?t=" + omdbing.omdb_search + "&y=&plot=short&r=json";
+            request(queryUrl, function(error, response, body) {
+                parseBody=JSON.parse(body);
+                if(!error && response.statusCode === 200) {
+                    console.log("Title: " + parseBody.Title);
+                    console.log("Year released: " + parseBody.Year);
+                    console.log("IMDB Rating: " + parseBody.imdbRating);
+                    console.log("Country of origin: " + parseBody.Country);
+                    console.log("Language(s): " + parseBody.Language);
+                    console.log("Plot: " + parseBody.Plot);
+                    console.log("Cast: " + parseBody.Actors);
+                    console.log("Rotten Tomatoes Score: " + parseBody.Ratings[1].Value);
+                }
+            });
+        };
     });
 };
 
 //function for grabbing the text from random and doing what it says
 function doWhatItSays () {
-    console.log("Checking what it says...")
+    var fs = require('fs');
+    var array = fs.readFileSync('random.txt').toString().split("\n");
+    for(i in array) {
+        console.log(array[i].split(",")[0]);
+        if(array[i].split(",")[0] === "my_tweets") {
+            myTweets();
+        } else if (array[i].split(",")[0] === "spotify_this_song") {
+            spotifyThisSong();
+        } else if (array[i].split(",")[0] === "movie_this") {
+            movieThis();
+        } else {
+            console.log("I can't read this line...");
+        }
+    }
 
 };
