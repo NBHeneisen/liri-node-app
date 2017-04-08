@@ -151,13 +151,58 @@ function doWhatItSays () {
     var fs = require('fs');
     var array = fs.readFileSync('random.txt').toString().split("\n");
     for(i in array) {
-        console.log(array[i].split(",")[0]);
-        if(array[i].split(",")[0] === "my_tweets") {
+        if(array[i].split(",")[0] === "my-tweets") {
             myTweets();
-        } else if (array[i].split(",")[0] === "spotify_this_song") {
-            spotifyThisSong();
-        } else if (array[i].split(",")[0] === "movie_this") {
-            movieThis();
+        } else if (array[i].split(",")[0] === "spotify-this-song") {
+                if (array[i].split(",")[1] === "") {
+                    theSign()
+                } else {
+                    spotify.search({ type: 'track', query: array[i].split(",")[1] }, function(err, data) {
+                        if ( err ) {
+                            console.log('Error occurred: ' + err);
+                            return;
+                        };
+                        for (i=0; i < data.tracks.items.length; i++) {
+                            console.log("Artist: " + data.tracks.items[i].artists[0].name);
+                            console.log("Song: " + data.tracks.items[i].name);
+                            console.log("Preview: " + data.tracks.items[i].preview_url);
+                            console.log("Album: " + data.tracks.items[i].album.name);
+                            console.log("-------------------------------")
+                        }
+                    });
+                }
+        } else if (array[i].split(",")[0] === "movie-this") {
+            if(array[i].split(",")[1]=== "") {
+                var queryUrl = "http://www.omdbapi.com/?t=Mr+Nobody&y=&plot=short&r=json";
+                request(queryUrl, function(error, response, body) {
+                    parseBody=JSON.parse(body);
+                    if(!error && response.statusCode === 200) {
+                        console.log("Title: " + parseBody.Title);
+                        console.log("Year released: " + parseBody.Year);
+                        console.log("IMDB Rating: " + parseBody.imdbRating);
+                        console.log("Country of origin: " + parseBody.Country);
+                        console.log("Language(s): " + parseBody.Language);
+                        console.log("Plot: " + parseBody.Plot);
+                        console.log("Cast: " + parseBody.Actors);
+                        console.log("Rotten Tomatoes Score: " + parseBody.Ratings[1].Value);
+                    }
+                });
+            } else {
+                var queryUrl = "http://www.omdbapi.com/?t=" + array[i].split(",")[1] + "&y=&plot=short&r=json";
+                request(queryUrl, function(error, response, body) {
+                    parseBody=JSON.parse(body);
+                    if(!error && response.statusCode === 200) {
+                        console.log("Title: " + parseBody.Title);
+                        console.log("Year released: " + parseBody.Year);
+                        console.log("IMDB Rating: " + parseBody.imdbRating);
+                        console.log("Country of origin: " + parseBody.Country);
+                        console.log("Language(s): " + parseBody.Language);
+                        console.log("Plot: " + parseBody.Plot);
+                        console.log("Cast: " + parseBody.Actors);
+                        console.log("Rotten Tomatoes Score: " + parseBody.Ratings[1].Value);
+                    }
+                });
+            };
         } else {
             console.log("I can't read this line...");
         }
